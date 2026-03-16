@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>StudyCo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <main id="pantalla-login" class="contenedor-principal">
+        <header class="encabezado-logo">
+            <h1>StudyCo</h1>
+        </header>
+        <section class="seccion-login">
+            <div class="titulo-con-lineas">
+                <h2>Iniciar sesión</h2>
+            </div>
+            <div class="tarjeta-formulario">
+                <form id="form-login">
+                    <div class="grupo-input">
+                        <input type="email" id="correo-login" placeholder="Correo Electrónico" required />
+                    </div>
+                    <div class="grupo-input">
+                        <input type="password" id="pass-login" placeholder="Contraseña" required />
+                    </div>
+                    <div class="grupo-checkbox">
+                        <input type="checkbox" id="recordar" />
+                        <label for="recordar">Recordar mi contraseña</label>
+                    </div>
+                    <button type="submit" class="btn-principal btn-ancho-completo">
+                        Iniciar sesión
+                    </button>
+                    <a href="#" id="btn-ir-olvido" class="enlace-recuperar">Recuperar contraseña</a>
+                </form>
+            </div>
+            <div class="seccion-registro-inferior">
+                <p>¿Todavía no tiene cuenta?</p>
+                <div class="titulo-con-lineas">
+                    <button type="button" id="btn-ir-registro" class="btn-principal btn-ancho-completo">
+                        Registrarse
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="pantalla-registro" class="contenedor-principal oculto">
+        <header class="encabezado-logo">
+            <h1>StudyCo</h1>
+        </header>
+        <section class="seccion-login">
+            <div class="titulo-con-lineas">
+                <h2>Registrarse</h2>
+            </div>
+            <div class="tarjeta-formulario">
+                <form id="form-registro">
+                    <div class="grupo-input">
+                        <input type="text" placeholder="Nombre" required />
+                    </div>
+                    <div class="grupo-input">
+                        <input type="text" placeholder="Apellidos" required />
+                    </div>
+                    <div class="grupo-input">
+                        <input type="email" placeholder="Correo Electrónico" required />
+                    </div>
+                    <div class="grupo-input">
+                        <input type="password" placeholder="Contraseña" required />
+                    </div>
+                    <button type="submit" class="btn-principal btn-ancho-completo">
+                        Registrarse
+                    </button>
+                </form>
+            </div>
+            <div class="seccion-registro-inferior">
+                <p>¿Ya tiene cuenta?</p>
+                <div class="titulo-con-lineas">
+                    <button type="button" id="btn-volver-login-reg" class="btn-principal btn-ancho-completo">
+                        Iniciar sesión
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="pantalla-olvido" class="contenedor-principal oculto">
+        <header class="encabezado-logo">
+            <h1>StudyCo</h1>
+        </header>
+        <section class="seccion-login">
+            <div class="titulo-con-lineas">
+                <h2>Contraseña olvidada</h2>
+            </div>
+            <div class="tarjeta-formulario">
+                <form id="form-olvido">
+                    <div class="grupo-input">
+                        <input type="email" placeholder="Correo electrónico" required />
+                    </div>
+                    <p class="texto-explicativo">
+                        Al hacer click en "Restablecer" se enviará a su correo introducido
+                        un link para restablecer la contraseña.
+                    </p>
+                    <button type="submit" class="btn-principal btn-ancho-completo">
+                        Restablecer
+                    </button>
+                </form>
+            </div>
+            <div class="seccion-registro-inferior">
+                <div class="titulo-con-lineas">
+                    <button type="button" id="btn-volver-login-olv" class="btn-principal btn-mediano">
+                        Volver
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="pantalla-formulario" class="contenedor-principal oculto">
+        <header class="encabezado-logo encabezado-formulario">
+            <h1>StudyCo</h1>
+            <p class="subtitulo-formulario">Cuéntanos tus hábitos de estudio</p>
+        </header>
+
+        <form id="form-preferencias" class="contenedor-dos-columnas tarjeta-formulario-estudio">
+            <div class="columna-formulario">
+                <h3 class="titulo-seccion-form">Horarios y tiempo</h3>
+
+                <div class="fila-inputs-dobles">
+                    <div class="grupo-pregunta mitad">
+                        <label>Horario inicio</label>
+                        <input type="time" required />
+                    </div>
+                    <div class="grupo-pregunta mitad">
+                        <label>Horario fin</label>
+                        <input type="time" required />
+                    </div>
+                </div>
+
+                <div class="fila-inputs-dobles">
+                    <div class="grupo-pregunta mitad">
+                        <label>Horario fijo inicio</label>
+                        <input type="time" required />
+                    </div>
+                    <div class="grupo-pregunta mitad">
+                        <label>Horario fijo fin</label>
+                        <input type="time" required />
+                    </div>
+                </div>
+
+                <div class="grupo-pregunta">
+                    <label>Horas de ocio al día</label>
+                    <input type="number" required class="input-texto-largo fondo-blanco" />
+                </div>
+
+                <div class="grupo-pregunta">
+                    <label>Mejor momento para estudiar</label>
+                    <div class="opciones-radio-izq">
+                        <label><input type="radio" name="energia" value="mañana" /> Mañana</label>
+                        <label><input type="radio" name="energia" value="tarde" checked /> Tarde</label>
+                        <label><input type="radio" name="energia" value="noche" /> Noche</label>
+                    </div>
+                </div>
+
+                <div class="grupo-pregunta">
+                    <label>Tiempo de concentración (min)</label>
+                    <input type="number" required class="input-texto-largo fondo-blanco" />
+                </div>
+            </div>
+
+            <div class="columna-formulario">
+                <h3 class="titulo-seccion-form">Preferencias personales</h3>
+
+                <div class="grupo-pregunta">
+                    <label>Nivel de estrés: <span id="valor-estres">5</span></label>
+                    <input type="range" min="1" max="10" value="5" class="input-rango"
+                        oninput="document.getElementById('valor-estres').innerText = this.value" />
+                    <div class="etiquetas-rango">
+                        <span>1 - Relajado</span><span>10 - Muy estresado</span>
+                    </div>
+                </div>
+
+                <div class="grupo-pregunta">
+                    <label>Actividades extra</label>
+                    <input type="text" placeholder="Ej: Deporte, música, voluntariado..."
+                        class="input-texto-largo fondo-blanco" />
+                </div>
+
+                <div class="grupo-pregunta">
+                    <label>Asignaturas difíciles</label>
+                    <input type="text" placeholder="Ej: Matemáticas, Física..."
+                        class="input-texto-largo fondo-blanco" />
+                </div>
+
+                <div class="grupo-pregunta">
+                    <label>Fines de semana libres</label>
+                    <div class="opciones-radio-izq">
+                        <label><input type="radio" name="findes" value="si" /> Sí</label>
+                        <label><input type="radio" name="findes" value="no" checked /> No</label>
+                    </div>
+                </div>
+
+                <div class="grupo-pregunta">
+                    <label>Múltiples asignaturas por sesión</label>
+                    <div class="opciones-radio-izq">
+                        <label><input type="radio" name="multiples" value="una" /> Una</label>
+                        <label><input type="radio" name="multiples" value="varias" checked /> Varias</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contenedor-boton-final">
+                <button type="submit" class="btn-principal btn-mediano">
+                    Aceptar
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <main id="pantalla-calendario" class="pantalla-dashboard oculto">
+        <header class="encabezado-dashboard">
+            <h1>StudyCo</h1>
+            <button id="btn-menu-usuario" class="icono-hamburguesa">☰</button>
+        </header>
+
+        <div class="navegacion-meses">
+            <button id="btn-mes-anterior" class="btn-flecha">◄</button>
+            <h2 id="mes-actual-texto" class="mes-actual">Cargando...</h2>
+            <button id="btn-mes-siguiente" class="btn-flecha">►</button>
+        </div>
+
+        <div class="layout-dos-columnas">
+            <aside id="panel-eventos-lateral" class="panel-eventos">
+                <div class="cabecera-panel-movil">
+                    <h3 id="texto-dia-seleccionado" class="dia-seleccionado">
+                        Selecciona un día
+                    </h3>
+                    <button type="button" id="btn-cerrar-panel-movil" class="btn-cerrar-modal">
+                        &times;
+                    </button>
+                </div>
+
+                <select id="desplegable-eventos" class="btn-desplegable">
+                    <option value="">Aún no hay eventos</option>
+                </select>
+
+                <form id="form-evento" class="formulario-lateral">
+                    <label>Nombre del Evento</label>
+                    <input type="text" id="ev-nombre" placeholder="Nombre del evento" maxlength="20" required />
+
+                    <div class="fila-inputs-dobles">
+                        <div class="mitad">
+                            <label>Inicio</label>
+                            <input type="time" id="ev-inicio" required />
+                        </div>
+                        <div class="mitad">
+                            <label>Fin</label>
+                            <input type="time" id="ev-fin" required />
+                        </div>
+                    </div>
+
+                    <label>Descripción</label>
+                    <textarea id="ev-desc" placeholder="Descripción..." rows="2"></textarea>
+
+                    <label>Categoría</label>
+                    <div class="opciones-cuadricula-movil">
+                        <label><input type="radio" name="ev-cat" value="estudio" checked /> Estudio</label>
+                        <label><input type="radio" name="ev-cat" value="examen" /> Examen</label>
+                        <label><input type="radio" name="ev-cat" value="trabajo" /> Trabajo</label>
+                        <label><input type="radio" name="ev-cat" value="personal" /> Personal</label>
+                    </div>
+
+                    <label>Prioridad: <span id="valor-prio">5</span></label>
+                    <input type="range" id="ev-prio" min="1" max="10" value="5"
+                        oninput="document.getElementById('valor-prio').innerText = this.value" />
+                    <div class="etiquetas-rango etiquetas-prio">
+                        <span>1 - Baja</span><span>10 - Urgente</span>
+                    </div>
+
+                    <div class="acciones-evento">
+                        <button type="button" id="btn-borrar-evento" class="btn-principal btn-borrar">
+                            Borrar
+                        </button>
+                        <button type="submit" class="btn-principal">Guardar</button>
+                    </div>
+                </form>
+            </aside>
+
+            <section class="cuadricula-calendario">
+                <div class="cabecera-dias">
+                    <span>LUN</span><span>MAR</span><span>MIÉ</span><span>JUE</span><span>VIE</span><span>SÁB</span><span>DOM</span>
+                </div>
+                <div id="contenedor-dias-mes" class="dias-mes"></div>
+            </section>
+        </div>
+    </main>
+
+    <main id="pantalla-admin-principal" class="pantalla-dashboard oculto">
+        <header class="encabezado-dashboard">
+            <h1>StudyCo</h1>
+            <button class="icono-hamburguesa btn-abrir-menu-admin">☰</button>
+        </header>
+
+        <div class="contenedor-admin">
+            <input type="text" id="buscador-usuarios" class="input-buscador" placeholder="Buscar usuario" />
+            <ul class="lista-usuarios">
+                <li class="tarjeta-usuario">
+                    <span class="nombre-usuario">Usuario1</span>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <main id="pantalla-admin-detalle" class="pantalla-dashboard oculto">
+        <header class="encabezado-dashboard">
+            <h1>StudyCo</h1>
+            <button class="icono-hamburguesa btn-abrir-menu-admin">☰</button>
+        </header>
+
+        <div class="layout-split-admin">
+            <aside class="columna-admin-lista">
+                <input type="text" class="input-buscador" placeholder="Buscar usuario" />
+                <ul class="lista-usuarios">
+                    <li class="tarjeta-usuario activo">
+                        <span class="nombre-usuario">Usuario1</span>
+                    </li>
+                </ul>
+            </aside>
+
+            <section class="columna-admin-detalle">
+                <h2>Usuario1</h2>
+
+                <label>Mensajes enviados por los administradores</label>
+                <div class="contenedor-input-admin">
+                    <textarea id="input-nuevo-mensaje" rows="3"
+                        placeholder="Escribe un nuevo mensaje aquí..."></textarea>
+                    <button id="btn-guardar-mensaje" class="btn-principal btn-guardar-admin oculto">
+                        Guardar
+                    </button>
+                </div>
+
+                <div id="log-mensajes" class="log-admin"></div>
+
+                <label>Alertas enviadas por los administradores</label>
+                <div class="contenedor-input-admin">
+                    <textarea id="input-nueva-alerta" rows="3"
+                        placeholder="Escribe una nueva alerta aquí..."></textarea>
+                    <button id="btn-guardar-alerta" class="btn-principal btn-guardar-admin oculto">
+                        Guardar
+                    </button>
+                </div>
+
+                <div id="log-alertas" class="log-admin"></div>
+
+                <div class="acciones-admin-grandes">
+                    <button id="btn-banear-usuario" class="btn-principal btn-banear">
+                        Banear usuario
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="overlay-global" class="overlay oculto"></div>
+
+    <nav id="menu-lateral-usuario" class="menu-lateral oculto">
+        <button id="abrir-perfil" class="btn-principal">Perfil</button>
+        <button id="abrir-config" class="btn-principal">Configuración</button>
+        <button id="cerrar-sesion" class="btn-principal">Cerrar sesión</button>
+    </nav>
+
+    <nav id="menu-lateral-admin" class="menu-lateral oculto">
+        <button id="abrir-config-admin" class="btn-principal">
+            Configuración
+        </button>
+        <button id="cerrar-sesion-admin" class="btn-principal">
+            Cerrar sesión
+        </button>
+    </nav>
+
+    <div id="modal-perfil" class="modal-ventana oculto">
+        <h2 class="titulo-modal">Perfil</h2>
+        <form class="formulario-modal">
+            <label>Cambiar Nombre</label>
+            <input type="text" placeholder="Introduce Nuevo Nombre ..." />
+            <label>Cambiar Apellidos</label>
+            <input type="text" placeholder="Introduce Nuevos Apellidos ..." />
+            <label>Cambiar Email ID</label>
+            <input type="email" placeholder="Introduce Nuevo Email ID ..." />
+            <label>Cambiar Contraseña</label>
+            <input type="password" placeholder="Introduce Nueva Contraseña ..." />
+
+            <div class="acciones-modal">
+                <button type="button" id="btn-ir-preferencias" class="btn-principal">
+                    Preferencias
+                </button>
+                <button type="submit" class="btn-principal">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="modal-configuracion" class="modal-ventana oculto">
+        <h2 class="titulo-modal">Configuración</h2>
+        <div class="opciones-config">
+            <div class="fila-config">
+                <span>Notificaciones</span>
+                <input type="checkbox" class="toggle-switch" />
+            </div>
+            <div class="fila-config">
+                <span>Sonido</span>
+                <input type="checkbox" class="toggle-switch" checked />
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
