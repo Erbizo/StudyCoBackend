@@ -384,9 +384,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Guardar ID temporalmente para el siguiente paso
-                    localStorage.setItem('tempUsuarioId', data.usuarioId);
-                    navegarA('formulario');
+                    if (data.rol === 'admin') {
+                        localStorage.setItem('usuario', JSON.stringify({
+                            id: data.usuarioId,
+                            nombre,
+                            correo,
+                            rol: data.rol,
+                            preferencias: {},
+                            eventos: {}
+                        }));
+                        navegarA('adminPrincipal');
+                    } else {
+                        // Guardar ID temporalmente para el siguiente paso
+                        localStorage.setItem('tempUsuarioId', data.usuarioId);
+                        navegarA('formulario');
+                    }
                 } else {
                     alert(data.error || 'Error en el registro');
                 }

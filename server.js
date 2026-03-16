@@ -56,7 +56,7 @@ db.serialize(() => {
 // --- REGISTRO DE USUARIO ---
 app.post('/api/auth/registro', (req, res) => {
     const { nombre, apellidos, correo, password } = req.body;
-    const rol = correo === 'admin@studyco.com' ? 'admin' : 'estudiante';
+    const rol = correo.endsWith('@studyco.com') ? 'admin' : 'estudiante';
 
     // Encriptar contraseña
     bcrypt.hash(password, 10, (err, hash) => {
@@ -72,7 +72,7 @@ app.post('/api/auth/registro', (req, res) => {
                 }
                 return res.status(500).json({ error: 'Error al registrar en la base de datos' });
             }
-            res.status(201).json({ mensaje: 'Usuario registrado con éxito', usuarioId: this.lastID });
+            res.status(201).json({ mensaje: 'Usuario registrado con éxito', usuarioId: this.lastID, rol: rol });
         });
     });
 });
