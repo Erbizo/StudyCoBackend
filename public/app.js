@@ -333,22 +333,68 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-ir-olvido')?.addEventListener('click', () => navegarA('olvido'));
     document.getElementById('btn-volver-login-olv')?.addEventListener('click', () => navegarA('login'));
 
-    document.getElementById('form-login')?.addEventListener('submit', (e) => {
+    document.getElementById('form-login')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (validarFormulario(e.target)) {
             const correo = document.getElementById('correo-login').value;
-            if (correo === 'admin@studyco.com') {
-                navegarA('adminPrincipal');
-            } else {
-                navegarA('calendario');
-                renderizarCalendario();
+            const password = document.getElementById('pass-login').value;
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ correo, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                    if (data.usuario.rol === 'admin') {
+                        navegarA('adminPrincipal');
+                    } else {
+                        navegarA('calendario');
+                        renderizarCalendario();
+                    }
+                } else {
+                    alert(data.error || 'Error al iniciar sesión');
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error de conexión con el servidor.");
             }
         }
     });
 
-    document.getElementById('form-registro')?.addEventListener('submit', (e) => {
+    document.getElementById('form-registro')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (validarFormulario(e.target)) navegarA('formulario');
+        if (validarFormulario(e.target)) {
+            const nombre = document.getElementById('reg-nombre').value;
+            const apellidos = document.getElementById('reg-apellidos').value;
+            const correo = document.getElementById('reg-correo').value;
+            const password = document.getElementById('reg-pass').value;
+
+            try {
+                const response = await fetch('/api/auth/registro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, apellidos, correo, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Guardar ID temporalmente para el siguiente paso
+                    localStorage.setItem('tempUsuarioId', data.usuarioId);
+                    navegarA('formulario');
+                } else {
+                    alert(data.error || 'Error en el registro');
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error de conexión con el servidor.");
+            }
+        }
     });
 
     document.getElementById('form-olvido')?.addEventListener('submit', (e) => {
@@ -356,18 +402,61 @@ document.addEventListener('DOMContentLoaded', () => {
         if (validarFormulario(e.target)) navegarA('login');
     });
 
-    document.getElementById('form-preferencias')?.addEventListener('submit', (e) => {
+    document.getElementById('form-preferencias')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (validarFormulario(e.target)) {
-            navegarA('calendario');
-            renderizarCalendario();
+            const tempUsuarioId = localStorage.getItem('tempUsuarioId');
+            
+            if (!tempUsuarioId) {
+                alert("Error de sesión. Por favor, inicie sesión de nuevo.");
+                navegarA('login');
+                return;
+            }
+
+            const preferencias = {
+                horarioInicio: document.getElementById('pref-h-inicio').value,
+                horarioFin: document.getElementById('pref-h-fin').value,
+                horarioFijoInicio: document.getElementById('pref-h-fijo-inicio').value,
+                horarioFijoFin: document.getElementById('pref-h-fijo-fin').value,
+                horasOcio: document.getElementById('pref-ocio').value,
+                energia: document.querySelector('input[name="energia"]:checked')?.value,
+                concentracion: document.getElementById('pref-concentracion').value,
+                estres: document.getElementById('pref-estres').value,
+                actividadesExtra: document.getElementById('pref-extra').value,
+                asignaturasDificiles: document.getElementById('pref-dificiles').value,
+                finesSemanaLibres: document.querySelector('input[name="findes"]:checked')?.value === 'si',
+                multiplesAsignaturas: document.querySelector('input[name="multiples"]:checked')?.value === 'varias'
+            };
+
+            try {
+                const response = await fetch(`/api/usuarios/${tempUsuarioId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ preferencias })
+                });
+
+                if (response.ok) {
+                    // Limpiar el ID temporal y obligar a iniciar sesión para cargar todo completo
+                    localStorage.removeItem('tempUsuarioId');
+                    alert("¡Preferencias guardadas! Ahora por favor inicia sesión.");
+                    navegarA('login');
+                } else {
+                    alert('Error al guardar las preferencias');
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error de conexión con el servidor.");
+            }
         }
     });
 
     document.getElementById('btn-menu-usuario')?.addEventListener('click', () => abrirElemento(menuUsuario));
     document.getElementById('abrir-perfil')?.addEventListener('click', () => { menuUsuario.classList.add('oculto'); abrirElemento(modalPerfil); });
     document.getElementById('abrir-config')?.addEventListener('click', () => { menuUsuario.classList.add('oculto'); abrirElemento(modalConfig); });
-    document.getElementById('cerrar-sesion')?.addEventListener('click', () => navegarA('login'));
+    document.getElementById('cerrar-sesion')?.addEventListener('click', () => {
+        localStorage.removeItem('usuario');
+        navegarA('login');
+    });
     document.getElementById('btn-ir-preferencias')?.addEventListener('click', () => { cerrarTodo(); navegarA('formulario'); });
 
     document.querySelectorAll('.btn-abrir-menu-admin').forEach(btn => {
@@ -375,7 +464,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('abrir-config-admin')?.addEventListener('click', () => { menuAdmin.classList.add('oculto'); abrirElemento(modalConfig); });
-    document.getElementById('cerrar-sesion-admin')?.addEventListener('click', () => navegarA('login'));
+    document.getElementById('cerrar-sesion-admin')?.addEventListener('click', () => {
+        localStorage.removeItem('usuario');
+        navegarA('login');
+    });
 
     const tarjetasUsuario = document.querySelectorAll('.tarjeta-usuario');
     tarjetasUsuario.forEach(tarjeta => {

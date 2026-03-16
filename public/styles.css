@@ -49,6 +49,7 @@ body {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -124,13 +125,13 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    
+
     /* Mantiene el tamaño estricto para evitar el scroll fantasma */
-    height: 100vh; 
-    height: 100dvh; 
-    
+    height: 100vh;
+    height: 100dvh;
+
     /* LA SOLUCIÓN: Solo permite scroll vertical si el contenido no cabe */
-    overflow-y: auto; 
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
@@ -203,6 +204,14 @@ body {
     text-align: center;
 }
 
+.contenedor-boton-inferior {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 0 3rem;
+}
+
 .texto-explicativo {
     text-align: center;
     margin-bottom: 2rem;
@@ -215,31 +224,41 @@ body {
 .contenedor-dos-columnas {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 2rem;
     width: 100%;
     max-width: 1000px;
     padding: 0 2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
 }
 
 .columna-formulario {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .grupo-pregunta label {
     display: block;
     font-size: 1.3rem;
-    text-align: center;
+    text-align: left;
     margin-bottom: 0.8rem;
 }
 
 .fila-inputs-dobles {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
+}
+
+.mitad {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.fila-inputs-dobles input[type="time"] {
+    width: 100%;
 }
 
 .fila-inputs-dobles input[type="time"],
@@ -250,7 +269,7 @@ body {
     font-size: 1.1rem;
     background-color: transparent;
     color: var(--color-texto-principal);
-    text-align: center;
+    text-align: left;
 }
 
 .input-texto-largo {
@@ -259,7 +278,7 @@ body {
 
 .opciones-radio-izq {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 2rem;
     font-size: 1.2rem;
 }
@@ -288,11 +307,14 @@ body {
    ========================================================================== */
 .pantalla-dashboard {
     width: 100%;
-    height: 100vh; /* Alto fijo estricto */
-    height: 100dvh; /* Soporte para navegadores móviles modernos */
+    height: 100vh;
+    /* Alto fijo estricto */
+    height: 100dvh;
+    /* Soporte para navegadores móviles modernos */
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Se elimina el scroll global de esta vista */
+    overflow: hidden;
+    /* Se elimina el scroll global de esta vista */
 }
 
 
@@ -302,12 +324,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.4rem 2rem; /* Reducido a la mitad (antes 0.8rem) */
+    padding: 0.4rem 2rem;
+    /* Reducido a la mitad (antes 0.8rem) */
     border-bottom: 1px solid #E5E7EB;
 }
 
 .encabezado-dashboard h1 {
-    font-size: 2.2rem; /* Ligeramente más pequeño (antes 2.5rem) */
+    font-size: 2.2rem;
+    /* Ligeramente más pequeño (antes 2.5rem) */
     font-weight: 400;
 }
 
@@ -315,7 +339,8 @@ body {
 .icono-hamburguesa {
     background: none;
     border: none;
-    font-size: 1.8rem; /* Antes 2rem */
+    font-size: 1.8rem;
+    /* Antes 2rem */
     cursor: pointer;
     color: var(--color-texto-principal);
 }
@@ -325,7 +350,8 @@ body {
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    padding: 0.2rem 0 0.5rem 0; /* Relleno mínimo para ahorrar espacio máximo */
+    padding: 0.2rem 0 0.5rem 0;
+    /* Relleno mínimo para ahorrar espacio máximo */
 }
 
 .btn-flecha {
@@ -343,7 +369,8 @@ body {
 }
 
 .mes-actual {
-    font-size: 1.8rem; /* Ligeramente reducido (antes 2rem) */
+    font-size: 1.8rem;
+    /* Ligeramente reducido (antes 2rem) */
     font-weight: 400;
     min-width: 150px;
     text-align: center;
@@ -354,7 +381,8 @@ body {
     display: flex;
     flex: 1;
     border-top: 1px solid #E5E7EB;
-    overflow: hidden; /* Mantiene la rigidez estructural */
+    overflow: hidden;
+    /* Mantiene la rigidez estructural */
 }
 
 /* Panel Izquierdo */
@@ -366,13 +394,20 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    overflow-y: auto; /* Scroll interno en el menú lateral */
+    overflow-y: auto;
+    /* Scroll interno en el menú lateral */
     overflow-x: hidden;
 }
 
 /* Scrollbar estilizado para el panel lateral */
-.panel-eventos::-webkit-scrollbar { width: 6px; }
-.panel-eventos::-webkit-scrollbar-thumb { background-color: #D1D5DB; border-radius: 4px; }
+.panel-eventos::-webkit-scrollbar {
+    width: 6px;
+}
+
+.panel-eventos::-webkit-scrollbar-thumb {
+    background-color: #D1D5DB;
+    border-radius: 4px;
+}
 
 .dia-seleccionado {
     text-align: center;
@@ -435,8 +470,14 @@ select.btn-desplegable:hover {
 .acciones-evento {
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
     margin-top: 1.5rem;
-    padding-bottom: 1rem; /* Margen inferior para no quedar pegado al final */
+    padding-bottom: 1rem;
+    /* Margen inferior para no quedar pegado al final */
+}
+
+.acciones-evento button {
+    flex: 1;
 }
 
 .btn-borrar {
@@ -449,7 +490,8 @@ select.btn-desplegable:hover {
     display: flex;
     flex-direction: column;
     padding: 1rem 2rem;
-    overflow: hidden; /* Mantiene la cuadrícula aislada */
+    overflow: hidden;
+    /* Mantiene la cuadrícula aislada */
 }
 
 .cabecera-dias {
@@ -464,11 +506,13 @@ select.btn-desplegable:hover {
     flex: 1;
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    grid-auto-rows: minmax(0, 1fr); /* Filas matemáticamente iguales */
+    grid-auto-rows: minmax(0, 1fr);
+    /* Filas matemáticamente iguales */
     gap: 1px;
     background-color: var(--color-texto-principal);
     border: 1px solid var(--color-texto-principal);
-    min-height: 0; /* Permite comprimir la cuadrícula */
+    min-height: 0;
+    /* Permite comprimir la cuadrícula */
 }
 
 .dia {
@@ -482,8 +526,9 @@ select.btn-desplegable:hover {
     flex-direction: column;
     gap: 4px;
     min-width: 0;
-    min-height: 0; 
-    overflow-y: auto; /* Activa el scroll si hay exceso de eventos en un día */
+    min-height: 0;
+    overflow-y: auto;
+    /* Activa el scroll si hay exceso de eventos en un día */
     overflow-x: hidden;
 }
 
@@ -502,8 +547,14 @@ select.btn-desplegable:hover {
 }
 
 /* Scrollbar estilizado para las casillas de los días */
-.dia::-webkit-scrollbar { width: 4px; }
-.dia::-webkit-scrollbar-thumb { background-color: #D1D5DB; border-radius: 4px; }
+.dia::-webkit-scrollbar {
+    width: 4px;
+}
+
+.dia::-webkit-scrollbar-thumb {
+    background-color: #D1D5DB;
+    border-radius: 4px;
+}
 
 .evento-miniatura {
     display: block;
@@ -565,7 +616,8 @@ select.btn-desplegable:hover {
     grid-template-columns: 350px 1fr;
     flex: 1;
     border-top: 1px solid #E5E7EB;
-    overflow: hidden; /* Ajuste para vista completa */
+    overflow: hidden;
+    /* Ajuste para vista completa */
 }
 
 .columna-admin-lista {
