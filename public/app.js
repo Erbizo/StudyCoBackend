@@ -30,6 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pantalla) {
                 pantalla.classList.add('oculto');
                 pantalla.classList.remove('fade-in-activo');
+
+                // Limpiar todos los formularios de la pantalla que se oculta
+                pantalla.querySelectorAll('form').forEach(form => form.reset());
+                // Eliminar mensajes de error de validación
+                pantalla.querySelectorAll('.mensaje-error').forEach(msg => msg.remove());
+                // Restaurar estilos de borde de inputs
+                pantalla.querySelectorAll('input, textarea').forEach(input => {
+                    input.style.borderColor = '';
+                });
             }
         });
 
@@ -352,6 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('usuario', JSON.stringify(data.usuario));
                     if (data.usuario.rol === 'admin') {
                         navegarA('adminPrincipal');
+                        cargarEstudiantes();
                     } else {
                         navegarA('calendario');
                         renderizarCalendario();
@@ -394,6 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             eventos: {}
                         }));
                         navegarA('adminPrincipal');
+                        cargarEstudiantes();
                     } else {
                         // Guardar ID temporalmente para el siguiente paso
                         localStorage.setItem('tempUsuarioId', data.usuarioId);
@@ -481,16 +492,42 @@ document.addEventListener('DOMContentLoaded', () => {
         navegarA('login');
     });
 
-    const tarjetasUsuario = document.querySelectorAll('.tarjeta-usuario');
-    tarjetasUsuario.forEach(tarjeta => {
-        tarjeta.addEventListener('click', () => navegarA('adminDetalle'));
-    });
+    // ==========================================================================
+    // CARGA DINÁMICA DE ESTUDIANTES EN PANEL ADMIN
+    // ==========================================================================
+    async function cargarEstudiantes() {
+        const listaAdmin = document.getElementById('lista-usuarios-admin');
+        if (!listaAdmin) return;
+
+        try {
+            const response = await fetch('/api/admin/estudiantes');
+            const estudiantes = await response.json();
+
+            listaAdmin.innerHTML = '';
+
+            if (estudiantes.length === 0) {
+                listaAdmin.innerHTML = '<li class="tarjeta-usuario"><span class="nombre-usuario">No hay estudiantes registrados</span></li>';
+                return;
+            }
+
+            estudiantes.forEach(est => {
+                const li = document.createElement('li');
+                li.className = 'tarjeta-usuario';
+                li.innerHTML = `<span class="nombre-usuario">${est.nombre} ${est.apellidos}</span>`;
+                li.addEventListener('click', () => navegarA('adminDetalle'));
+                listaAdmin.appendChild(li);
+            });
+        } catch (error) {
+            console.error('Error al cargar estudiantes:', error);
+        }
+    }
 
     const buscador = document.getElementById('buscador-usuarios');
     if (buscador) {
         buscador.addEventListener('keyup', (e) => {
             const termino = e.target.value.toLowerCase();
-            tarjetasUsuario.forEach(tarjeta => {
+            const tarjetas = document.querySelectorAll('#lista-usuarios-admin .tarjeta-usuario');
+            tarjetas.forEach(tarjeta => {
                 const nombre = tarjeta.querySelector('.nombre-usuario').innerText.toLowerCase();
                 if (nombre.includes(termino)) {
                     tarjeta.style.display = 'flex';
