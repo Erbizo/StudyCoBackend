@@ -497,6 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================================================
     async function cargarEstudiantes() {
         const listaAdmin = document.getElementById('lista-usuarios-admin');
+        const listaAdminDetalle = document.getElementById('lista-usuarios-admin-detalle');
         if (!listaAdmin) return;
 
         try {
@@ -504,22 +505,51 @@ document.addEventListener('DOMContentLoaded', () => {
             const estudiantes = await response.json();
 
             listaAdmin.innerHTML = '';
+            if (listaAdminDetalle) listaAdminDetalle.innerHTML = '';
 
             if (estudiantes.length === 0) {
                 listaAdmin.innerHTML = '<li class="tarjeta-usuario"><span class="nombre-usuario">No hay estudiantes registrados</span></li>';
+                if (listaAdminDetalle) listaAdminDetalle.innerHTML = '<li class="tarjeta-usuario"><span class="nombre-usuario">No hay estudiantes</span></li>';
                 return;
             }
 
             estudiantes.forEach(est => {
-                const li = document.createElement('li');
-                li.className = 'tarjeta-usuario';
-                li.innerHTML = `<span class="nombre-usuario">${est.nombre} ${est.apellidos}</span>`;
-                li.addEventListener('click', () => navegarA('adminDetalle'));
-                listaAdmin.appendChild(li);
+                // Tarjeta para la vista principal
+                const liPrincipal = document.createElement('li');
+                liPrincipal.className = 'tarjeta-usuario';
+                liPrincipal.innerHTML = `<span class="nombre-usuario">${est.nombre} ${est.apellidos}</span>`;
+
+                // Tarjeta para la vista detalle
+                let liDetalle = null;
+                if (listaAdminDetalle) {
+                    liDetalle = document.createElement('li');
+                    liDetalle.className = 'tarjeta-usuario';
+                    liDetalle.innerHTML = `<span class="nombre-usuario">${est.nombre} ${est.apellidos}</span>`;
+                    listaAdminDetalle.appendChild(liDetalle);
+                }
+
+                // Eventos de click para abrir el detalle
+                const onClick = () => abrirDetalleEstudiante(est, liDetalle);
+                liPrincipal.addEventListener('click', onClick);
+                if (liDetalle) liDetalle.addEventListener('click', onClick);
+
+                listaAdmin.appendChild(liPrincipal);
             });
         } catch (error) {
             console.error('Error al cargar estudiantes:', error);
         }
+    }
+
+    function abrirDetalleEstudiante(est, liDetalle) {
+        // Marcamos como activo en el sidebar del detalle
+        document.querySelectorAll('#lista-usuarios-admin-detalle .tarjeta-usuario').forEach(el => el.classList.remove('activo'));
+        if (liDetalle) liDetalle.classList.add('activo');
+
+        // Actualizamos el título de la vista
+        const titulo = document.getElementById('titulo-usuario-detalle');
+        if (titulo) titulo.innerText = `${est.nombre} ${est.apellidos}`;
+
+        navegarA('adminDetalle');
     }
 
     const buscador = document.getElementById('buscador-usuarios');
@@ -529,11 +559,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const tarjetas = document.querySelectorAll('#lista-usuarios-admin .tarjeta-usuario');
             tarjetas.forEach(tarjeta => {
                 const nombre = tarjeta.querySelector('.nombre-usuario').innerText.toLowerCase();
-                if (nombre.includes(termino)) {
-                    tarjeta.style.display = 'flex';
-                } else {
-                    tarjeta.style.display = 'none';
-                }
+                tarjeta.style.display = nombre.includes(termino) ? 'flex' : 'none';
+            });
+        });
+    }
+
+    const buscadorDetalle = document.getElementById('buscador-usuarios-detalle');
+    if (buscadorDetalle) {
+        buscadorDetalle.addEventListener('keyup', (e) => {
+            const termino = e.target.value.toLowerCase();
+            const tarjetas = document.querySelectorAll('#lista-usuarios-admin-detalle .tarjeta-usuario');
+            tarjetas.forEach(tarjeta => {
+                const nombre = tarjeta.querySelector('.nombre-usuario').innerText.toLowerCase();
+                tarjeta.style.display = nombre.includes(termino) ? 'flex' : 'none';
             });
         });
     }
