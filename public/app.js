@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuAdmin = document.getElementById('menu-lateral-admin');
     const modalPerfil = document.getElementById('modal-perfil');
     const modalConfig = document.getElementById('modal-configuracion');
+    const modalInfoUsuario = document.getElementById('modal-info-usuario');
 
     const panelEventos = document.querySelector('.panel-eventos');
     const btnCerrarPanelMovil = document.querySelector('.btn-cerrar-modal');
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function cerrarTodo() {
         overlay.classList.add('oculto');
-        [menuUsuario, menuAdmin, modalPerfil, modalConfig].forEach(el => {
+        [menuUsuario, menuAdmin, modalPerfil, modalConfig, modalInfoUsuario].forEach(el => {
             if (el) {
                 el.classList.add('oculto');
                 el.classList.remove('fade-in-activo');
@@ -540,7 +541,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    let estudianteSeleccionadoId = null;
+
     function abrirDetalleEstudiante(est, liDetalle) {
+        // Guardamos el ID del estudiante seleccionado
+        estudianteSeleccionadoId = est.id;
+
         // Marcamos como activo en el sidebar del detalle
         document.querySelectorAll('#lista-usuarios-admin-detalle .tarjeta-usuario').forEach(el => el.classList.remove('activo'));
         if (liDetalle) liDetalle.classList.add('activo');
@@ -550,6 +556,35 @@ document.addEventListener('DOMContentLoaded', () => {
         if (titulo) titulo.innerText = `${est.nombre} ${est.apellidos}`;
 
         navegarA('adminDetalle');
+
+        // Cargar mensajes y alertas desde la BD para este usuario
+        cargarMensajesUsuario(est.id);
+    }
+
+    async function cargarMensajesUsuario(usuarioId) {
+        const logMensajesEl = document.getElementById('log-mensajes');
+        const logAlertasEl = document.getElementById('log-alertas');
+        if (logMensajesEl) logMensajesEl.innerHTML = '';
+        if (logAlertasEl) logAlertasEl.innerHTML = '';
+
+        try {
+            const response = await fetch(`/api/admin/usuarios/${usuarioId}/mensajes`);
+            const mensajes = await response.json();
+
+            mensajes.forEach(msg => {
+                const nuevoItem = document.createElement('div');
+                nuevoItem.className = 'item-log fade-in-activo';
+                nuevoItem.innerText = msg.texto;
+
+                if (msg.tipo === 'mensaje' && logMensajesEl) {
+                    logMensajesEl.appendChild(nuevoItem);
+                } else if (msg.tipo === 'alerta' && logAlertasEl) {
+                    logAlertasEl.appendChild(nuevoItem);
+                }
+            });
+        } catch (error) {
+            console.error('Error al cargar mensajes:', error);
+        }
     }
 
     const buscador = document.getElementById('buscador-usuarios');
@@ -587,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnGuardarAlerta = document.getElementById('btn-guardar-alerta');
     const logAlertas = document.getElementById('log-alertas');
 
-    function configurarTextareaAdmin(input, btn, log) {
+    function configurarTextareaAdmin(input, btn, log, tipo) {
         if (!input || !btn || !log) return;
 
         input.addEventListener('input', () => {
@@ -598,23 +633,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             const texto = input.value.trim();
-            if (texto) {
-                const nuevoItem = document.createElement('div');
-                nuevoItem.className = 'item-log fade-in-activo';
-                nuevoItem.innerText = texto;
+            if (texto && estudianteSeleccionadoId) {
+                try {
+                    const response = await fetch(`/api/admin/usuarios/${estudianteSeleccionadoId}/mensajes`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ tipo, texto })
+                    });
 
-                log.prepend(nuevoItem);
+                    if (response.ok) {
+                        const nuevoItem = document.createElement('div');
+                        nuevoItem.className = 'item-log fade-in-activo';
+                        nuevoItem.innerText = texto;
+                        log.prepend(nuevoItem);
 
-                input.value = '';
-                btn.classList.add('oculto');
+                        input.value = '';
+                        btn.classList.add('oculto');
+                    } else {
+                        alert('Error al guardar');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error de conexión con el servidor.');
+                }
             }
         });
     }
 
-    configurarTextareaAdmin(inputMensaje, btnGuardarMensaje, logMensajes);
-    configurarTextareaAdmin(inputAlerta, btnGuardarAlerta, logAlertas);
+    configurarTextareaAdmin(inputMensaje, btnGuardarMensaje, logMensajes, 'mensaje');
+    configurarTextareaAdmin(inputAlerta, btnGuardarAlerta, logAlertas, 'alerta');
 
     // ==========================================================================
     // 7. LÓGICA DE BANEO DE USUARIOS
@@ -622,13 +671,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnBanear = document.getElementById('btn-banear-usuario');
     
     if (btnBanear) {
-        btnBanear.addEventListener('click', () => {
-            const confirmacion = confirm("¿Estás absolutamente seguro de que deseas banear a este usuario? Esta acción le impedirá acceder a StudyCo.");
+        btnBanear.addEventListener('click', async () => {
+            if (!estudianteSeleccionadoId) {
+                alert('Selecciona un usuario primero.');
+                return;
+            }
+
+            const confirmacion = confirm("¿Estás absolutamente seguro de que deseas banear a este usuario? Se eliminarán todos sus datos de forma permanente.");
             
             if (confirmacion) {
-                alert("El usuario ha sido baneado del sistema.");
-                navegarA('adminPrincipal');
+                try {
+                    const response = await fetch(`/api/admin/usuarios/${estudianteSeleccionadoId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        alert('El usuario ha sido eliminado del sistema.');
+                        estudianteSeleccionadoId = null;
+                        navegarA('adminPrincipal');
+                        cargarEstudiantes();
+                    } else {
+                        const data = await response.json();
+                        alert(data.error || 'Error al eliminar el usuario');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error de conexión con el servidor.');
+                }
             }
         });
+    }
+
+    // ==========================================================================
+    // 8. BOTÓN DE INFORMACIÓN DEL USUARIO
+    // ==========================================================================
+    const btnInfoUsuario = document.getElementById('btn-info-usuario');
+    const btnCerrarInfoUsuario = document.getElementById('btn-cerrar-info-usuario');
+
+    if (btnInfoUsuario) {
+        btnInfoUsuario.addEventListener('click', async () => {
+            if (!estudianteSeleccionadoId) {
+                alert('Selecciona un usuario primero.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/usuarios/${estudianteSeleccionadoId}/info`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('info-nombre').innerText = data.nombre;
+                    document.getElementById('info-apellidos').innerText = data.apellidos;
+                    document.getElementById('info-correo').innerText = data.correo;
+                    abrirElemento(modalInfoUsuario);
+                } else {
+                    alert(data.error || 'Error al obtener la información');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error de conexión con el servidor.');
+            }
+        });
+    }
+
+    if (btnCerrarInfoUsuario) {
+        btnCerrarInfoUsuario.addEventListener('click', cerrarTodo);
     }
 });

@@ -157,11 +157,11 @@
           </form>
         </div>
         <div class="seccion-registro-inferior">
-          <div class="titulo-con-lineas">
+          <div class="contenedor-boton-inferior">
             <button
               type="button"
               id="btn-volver-login-olv"
-              class="btn-principal btn-mediano"
+              class="btn-principal btn-ancho-completo"
             >
               Volver
             </button>
@@ -448,8 +448,7 @@
           class="input-buscador"
           placeholder="Buscar usuario"
         />
-        <ul id="lista-usuarios-admin" class="lista-usuarios">
-        </ul>
+        <ul id="lista-usuarios-admin" class="lista-usuarios"></ul>
       </div>
     </main>
 
@@ -467,12 +466,19 @@
             class="input-buscador"
             placeholder="Buscar usuario"
           />
-          <ul id="lista-usuarios-admin-detalle" class="lista-usuarios">
-          </ul>
+          <ul id="lista-usuarios-admin-detalle" class="lista-usuarios"></ul>
         </aside>
 
         <section class="columna-admin-detalle">
-          <h2 id="titulo-usuario-detalle"></h2>
+          <div class="cabecera-detalle-usuario">
+            <h2 id="titulo-usuario-detalle"></h2>
+            <button
+              id="btn-info-usuario"
+              class="btn-principal btn-info-usuario"
+            >
+              Información del usuario
+            </button>
+          </div>
 
           <label>Mensajes enviados por los administradores</label>
           <div class="contenedor-input-admin">
@@ -566,6 +572,36 @@
           <span>Sonido</span>
           <input type="checkbox" class="toggle-switch" checked />
         </div>
+      </div>
+    </div>
+
+    <div id="modal-info-usuario" class="modal-ventana oculto">
+      <h2 class="titulo-modal">Información del usuario</h2>
+      <div class="info-usuario-contenido">
+        <div class="info-fila">
+          <span class="info-label">Nombre:</span>
+          <span id="info-nombre" class="info-valor"></span>
+        </div>
+        <div class="info-fila">
+          <span class="info-label">Apellidos:</span>
+          <span id="info-apellidos" class="info-valor"></span>
+        </div>
+        <div class="info-fila">
+          <span class="info-label">Correo:</span>
+          <span id="info-correo" class="info-valor"></span>
+        </div>
+      </div>
+      <div
+        class="acciones-modal"
+        style="justify-content: center; margin-top: 2rem"
+      >
+        <button
+          type="button"
+          id="btn-cerrar-info-usuario"
+          class="btn-principal"
+        >
+          Cerrar
+        </button>
       </div>
     </div>
 
