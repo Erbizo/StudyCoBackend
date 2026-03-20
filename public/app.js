@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuAdmin = document.getElementById('menu-lateral-admin');
     const modalPerfil = document.getElementById('modal-perfil');
     const modalConfig = document.getElementById('modal-configuracion');
-    const modalInfoUsuario = document.getElementById('modal-info-usuario');
 
     const panelEventos = document.querySelector('.panel-eventos');
     const btnCerrarPanelMovil = document.querySelector('.btn-cerrar-modal');
@@ -59,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function cerrarTodo() {
         overlay.classList.add('oculto');
-        [menuUsuario, menuAdmin, modalPerfil, modalConfig, modalInfoUsuario].forEach(el => {
+        [menuUsuario, menuAdmin, modalPerfil, modalConfig].forEach(el => {
             if (el) {
                 el.classList.add('oculto');
                 el.classList.remove('fade-in-activo');
@@ -700,41 +699,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-    }
-
-    // ==========================================================================
-    // 8. BOTÓN DE INFORMACIÓN DEL USUARIO
-    // ==========================================================================
-    const btnInfoUsuario = document.getElementById('btn-info-usuario');
-    const btnCerrarInfoUsuario = document.getElementById('btn-cerrar-info-usuario');
-
-    if (btnInfoUsuario) {
-        btnInfoUsuario.addEventListener('click', async () => {
-            if (!estudianteSeleccionadoId) {
-                alert('Selecciona un usuario primero.');
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/admin/usuarios/${estudianteSeleccionadoId}/info`);
-                const data = await response.json();
-
-                if (response.ok) {
-                    document.getElementById('info-nombre').innerText = data.nombre;
-                    document.getElementById('info-apellidos').innerText = data.apellidos;
-                    document.getElementById('info-correo').innerText = data.correo;
-                    abrirElemento(modalInfoUsuario);
-                } else {
-                    alert(data.error || 'Error al obtener la información');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error de conexión con el servidor.');
-            }
-        });
-    }
-
-    if (btnCerrarInfoUsuario) {
-        btnCerrarInfoUsuario.addEventListener('click', cerrarTodo);
     }
 });
